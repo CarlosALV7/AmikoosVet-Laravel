@@ -34,7 +34,7 @@ class proveedorRequest extends FormRequest
     public function messages()
     {
     return [
-        'nombre.required' => 'nombre debe ser un campo requerido'
+        'nombre.required' => 'nombre debe ser un campo requerido',
         'codigopostal.required' => 'La codigopostal debe ser un campo requerido',
         'codigopostal.min' => 'La codigopostal debe tener minimo tres caracteres',
         'codigopostal.max' => 'La codigopostal debe tener maximo 6 caracteres',

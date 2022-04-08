@@ -1,98 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\DatosController;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Resources\DatoResource;
+use App\Http\Requests\datoRequest;
 use App\Models\Dato;
 use App\Http\Controllers\ApiController;
 
 class DatosController extends ApiController
 {
-    /**
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return DatoResource::collection(Dato::all());
+        $datos = Dato::all();
+        return $this->showAll($datos);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function show(Dato $dato)
     {
-        $request->validate(Dato::reglasValidacion());
-        $dato = Dato::create($request->all());
-        return new DatoResource($dato);
+        return $this->showOne($dato);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function update(datoRequest $request, Dato $dato)
     {
-        $dato = new Dato();
-        $dato->venta_id = $request->venta_id;
-        $dato->cantidad = $request->cantidad;
-        $dato->total = $request->total;
-
+        $dato->fill($request->all());
+        if ($dato->isClean()) {
+            return $this->errorResponse(
+                "You need to specify a different value to update",
+                422
+            );
+        }
         $dato->save();
+
+        return $this->showOne($dato);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function destroy(Dato $dato)
     {
-        return new DatoResource(Dato::findOrFail($id));
-    }
+        $dato->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate(Dato::reglasValidacion());
-        $dato = Dato::findOrFail($id);
-        $dato->update($request->all());
-        return new DatoResource($dato);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return $this->showOne($dato);
     }
 }

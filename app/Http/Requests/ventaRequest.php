@@ -35,8 +35,7 @@ class ventaRequest extends FormRequest
     public function messages()
     {
     return [
-        'usuario_id.required' => 'usuario_id debe ser un campo requerido'
-        'producto.required' => 'La producto debe ser un campo requerido',
+        'usuario_id.required' => 'usuario_id debe ser un campo requerido',
         'fecha.required' => 'La fecha debe ser un campo requerido',
         'monto.required' => 'El monto debe ser un campo requerido',
         'monto.min' => 'El monto debe tener minimo un caracter',

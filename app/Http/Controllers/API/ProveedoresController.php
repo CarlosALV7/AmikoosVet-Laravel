@@ -1,100 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\ProveedoresController;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Resources\ProveedorResource;
+use App\Http\Requests\proveedorRequest;
 use App\Models\Proveedor;
 use App\Http\Controllers\ApiController;
 
 class ProveedoresController extends ApiController
 {
-    /**
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return ProveedorResource::collection(Proveedor::all());
+        $proveedores = Proveedor::all();
+        return $this->showAll($proveedores);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function show(Proveedor $proveedor)
     {
-        $request->validate(Proveedor::reglasValidacion());
-        $proveedor = Proveedor::create($request->all());
-        return new ProveedorResource($proveedor);
+        return $this->showOne($proveedor);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function update(proveedorRequest $request, Proveedor $proveedor)
     {
-        $proveedor = new Proveedor();
-        $proveedor->nombre = $request->nombre;
-        $proveedor->codigopostal = $request->codigopostal;
-        $proveedor->direccion = $request->direccion;
-        $proveedor->telefono = $request->telefono;
-        $proveedor->email = $request->email;
-
+        $proveedor->fill($request->all());
+        if ($proveedor->isClean()) {
+            return $this->errorResponse(
+                "You need to specify a different value to update",
+                422
+            );
+        }
         $proveedor->save();
+
+        return $this->showOne($proveedor);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function destroy(Proveedor $proveedor)
     {
-        return new ProveedorResource(Proveedor::findOrFail($id));
-    }
+        $proveedor->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate(Proveedor::reglasValidacion());
-        $proveedor = Proveedor::findOrFail($id);
-        $proveedor->update($request->all());
-        return new ProveedorResource($proveedor);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return $this->showOne($proveedor);
     }
 }

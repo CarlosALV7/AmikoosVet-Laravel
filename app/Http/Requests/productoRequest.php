@@ -35,8 +35,7 @@ class productoRequest extends FormRequest
     public function messages()
     {
     return [
-        'proveedor_id.required' => 'proveedor_id debe ser un campo requerido'
-        'producto.required' => 'La producto debe ser un campo requerido',
+        'proveedor_id.required' => 'proveedor_id debe ser un campo requerido',
         'producto.min' => 'La producto debe tener minimo tres caracteres',
         'producto.max' => 'La producto debe tener maximo 100 caracteres',
         'marca.required' => 'La marca debe ser un campo requerido',
